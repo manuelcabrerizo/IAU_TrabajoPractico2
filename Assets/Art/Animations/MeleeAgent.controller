@@ -8,8 +8,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: PlayerChaseAreaExit
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsPlayerInChaseArea
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1934742814797482177}
@@ -61,7 +61,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: PlayerAttackAreaEnter
+    m_ConditionEvent: IsPlayerInAttackArea
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6665849480468505979}
@@ -113,8 +113,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: PlayerAttackAreaExit
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsPlayerInAttackArea
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1591885377709029538}
@@ -167,26 +167,14 @@ AnimatorController:
   m_Name: MeleeAgent
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: PlayerChaseAreaEnter
-    m_Type: 9
+  - m_Name: IsPlayerInChaseArea
+    m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: PlayerChaseAreaExit
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: PlayerAttackAreaEnter
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: PlayerAttackAreaExit
-    m_Type: 9
+  - m_Name: IsPlayerInAttackArea
+    m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
@@ -242,7 +230,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: PlayerChaseAreaEnter
+    m_ConditionEvent: IsPlayerInChaseArea
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1591885377709029538}

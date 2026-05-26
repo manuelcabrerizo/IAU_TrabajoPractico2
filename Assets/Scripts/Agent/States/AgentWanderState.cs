@@ -22,13 +22,15 @@ public class AgentWanderState : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        agent.DrawDebugSphere(agent.transform.position, searchRadius, Color.green);
+
         if (agent.NavMeshAgent.remainingDistance <= agent.NavMeshAgent.stoppingDistance)
         {
             agent.NavMeshAgent.SetDestination(GetNextDestination());
         }
         if (IsInChaseRange())
         {
-            animator.SetTrigger("PlayerChaseAreaEnter");
+            animator.SetBool("IsPlayerInChaseArea", true);
         }
     }
 

@@ -4,7 +4,7 @@ public class AgentChaseState : StateMachineBehaviour
 {
     [SerializeField] private float outOfReachRadius = 10.0f;
     [SerializeField] private float attackRadius = 1.0f;
-    private float pathfindingInterval = 0.5f;
+    private float pathfindingInterval = 0.25f;
     private float pathfindingTimer = 0.0f;
 
     private Agent agent = null;
@@ -25,8 +25,16 @@ public class AgentChaseState : StateMachineBehaviour
         pathfindingTimer = 0.0f;
     }
 
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        agent.NavMeshAgent.velocity = Vector3.zero;
+    }
+
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        agent.DrawDebugSphere(agent.transform.position, attackRadius, Color.red);
+        agent.DrawDebugSphere(agent.transform.position, outOfReachRadius, Color.yellow);
+
         pathfindingTimer += Time.deltaTime;
         if (pathfindingTimer >= pathfindingInterval)
         {
@@ -36,11 +44,11 @@ public class AgentChaseState : StateMachineBehaviour
 
         if (IsOutOfRange())
         {
-            animator.SetTrigger("PlayerChaseAreaExit");
+            animator.SetBool("IsPlayerInChaseArea", false);
         }
         else if (IsInAttackRange())
         {
-            animator.SetTrigger("PlayerAttackAreaEnter");
+            animator.SetBool("IsPlayerInAttackArea", true);
         }
     }
 
