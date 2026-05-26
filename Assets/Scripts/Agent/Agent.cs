@@ -3,9 +3,6 @@ using UnityEngine.AI;
 
 public class Agent : MonoBehaviour
 {
-    [SerializeField] private Transform[] patrolPoints;
-    public Transform[] PatrolPoints => patrolPoints;
-
     private NavMeshAgent navMeshAgent = null;
     public NavMeshAgent NavMeshAgent => navMeshAgent;
 

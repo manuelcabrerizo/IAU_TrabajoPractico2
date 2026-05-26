@@ -4,7 +4,6 @@ public class AgentWanderState : StateMachineBehaviour
 {
     [SerializeField] private float searchRadius = 10.0f;
 
-    private int currentPatrolPoint = 0;
     private Agent agent = null;
     private Transform attackTarget = null;
 
@@ -29,7 +28,7 @@ public class AgentWanderState : StateMachineBehaviour
         }
         if (IsInChaseRange())
         {
-            animator.SetTrigger("PlayerDetected");
+            animator.SetTrigger("PlayerChaseAreaEnter");
         }
     }
 
@@ -41,8 +40,6 @@ public class AgentWanderState : StateMachineBehaviour
 
     private Vector3 GetNextDestination()
     {
-        Vector3 destination = agent.PatrolPoints[currentPatrolPoint].position;
-        currentPatrolPoint = (currentPatrolPoint + 1) % agent.PatrolPoints.Length;
-        return destination;
+        return Vector3.zero;
     }
 }

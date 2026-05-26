@@ -54,13 +54,11 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessShot()
     {
-        Debug.Log("Right: " + shotTransform.right);
-        Debug.Log("Up: " + shotTransform.up);
-        Debug.Log("Forward: " + shotTransform.forward);
-
         if (Input.GetMouseButtonDown(0))
         {
+            // TODO: pool ...
             StartCoroutine(ShotAnimation(Instantiate(bulletTrailPrefab)));
+            // TODO: raycast whit the enemies
         }
     }
 
@@ -69,10 +67,8 @@ public class PlayerController : MonoBehaviour
         Vector3 direction = shotTransform.up;
         direction.y = 0.0f;
         direction.Normalize();
-
         Vector3 startPosition = shotTransform.position;
         Vector3 targetPosition = shotTransform.position + (direction * shotDistance);
-        
         float t = 0.0f;
         while (t <= 1.0f)
         {
@@ -80,7 +76,7 @@ public class PlayerController : MonoBehaviour
             t += Time.deltaTime * bulletAnimationSpeed;
             yield return new WaitForEndOfFrame();
         }
-
+        // TODO: pool
         Destroy(trailRenderer.gameObject);
     }
 }

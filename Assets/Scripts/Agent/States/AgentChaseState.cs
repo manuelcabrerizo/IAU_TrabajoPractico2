@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class AgentChaseState : StateMachineBehaviour
 {
-    [SerializeField] private float searchRadius = 10.0f;
+    [SerializeField] private float outOfReachRadius = 10.0f;
+    [SerializeField] private float attackRadius = 1.0f;
     private float pathfindingInterval = 0.5f;
     private float pathfindingTimer = 0.0f;
 
@@ -35,13 +36,35 @@ public class AgentChaseState : StateMachineBehaviour
 
         if (IsOutOfRange())
         {
-            animator.SetTrigger("PlayerOutOfReach");
+            animator.SetTrigger("PlayerChaseAreaExit");
+        }
+        else if (IsInAttackRange())
+        {
+            animator.SetTrigger("PlayerAttackAreaEnter");
         }
     }
 
     private bool IsOutOfRange()
     {
-        float sqrDistance = (attackTarget.position - agent.transform.position).sqrMagnitude;
-        return sqrDistance > searchRadius * searchRadius;
+        Vector3 position = agent.transform.position;
+        position.y = 0.0f;
+
+        Vector3 target = attackTarget.position;
+        target.y = 0.0f;
+
+        float sqrDistance = (target - position).sqrMagnitude;
+        return sqrDistance > outOfReachRadius * outOfReachRadius;
+    }
+
+    private bool IsInAttackRange()
+    {
+        Vector3 position = agent.transform.position;
+        position.y = 0.0f;
+
+        Vector3 target = attackTarget.position;
+        target.y = 0.0f;
+
+        float sqrDistance = (target - position).sqrMagnitude;
+        return sqrDistance <= attackRadius * attackRadius;
     }
 }
