@@ -1,0 +1,48 @@
+using UnityEngine;
+
+public class AgentWanderState : StateMachineBehaviour
+{
+    [SerializeField] private float searchRadius = 10.0f;
+
+    private int currentPatrolPoint = 0;
+    private Agent agent = null;
+    private Transform attackTarget = null;
+
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if (!agent)
+        {
+            agent = animator.GetComponent<Agent>();
+        }
+        if (!attackTarget)
+        {
+            attackTarget = FindAnyObjectByType<CharacterMovement>().transform;
+        }
+        agent.NavMeshAgent.SetDestination(GetNextDestination());
+    }
+
+    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if (agent.NavMeshAgent.remainingDistance <= agent.NavMeshAgent.stoppingDistance)
+        {
+            agent.NavMeshAgent.SetDestination(GetNextDestination());
+        }
+        if (IsInChaseRange())
+        {
+            animator.SetTrigger("PlayerDetected");
+        }
+    }
+
+    private bool IsInChaseRange()
+    {
+        float sqrDistance = (attackTarget.position - agent.transform.position).sqrMagnitude;
+        return sqrDistance <= searchRadius * searchRadius;
+    }
+
+    private Vector3 GetNextDestination()
+    {
+        Vector3 destination = agent.PatrolPoints[currentPatrolPoint].position;
+        currentPatrolPoint = (currentPatrolPoint + 1) % agent.PatrolPoints.Length;
+        return destination;
+    }
+}
