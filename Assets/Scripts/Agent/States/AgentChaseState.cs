@@ -18,7 +18,7 @@ public class AgentChaseState : StateMachineBehaviour
         }
         if (!attackTarget)
         {
-            attackTarget = FindAnyObjectByType<CharacterMovement>().transform;
+            attackTarget = FindAnyObjectByType<PlayerController>().transform;
         }
         agent.NavMeshAgent.SetDestination(attackTarget.position);
         pathfindingTimer = 0.0f;

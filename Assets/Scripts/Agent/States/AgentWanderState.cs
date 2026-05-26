@@ -16,7 +16,7 @@ public class AgentWanderState : StateMachineBehaviour
         }
         if (!attackTarget)
         {
-            attackTarget = FindAnyObjectByType<CharacterMovement>().transform;
+            attackTarget = FindAnyObjectByType<PlayerController>().transform;
         }
         agent.NavMeshAgent.SetDestination(GetNextDestination());
     }
