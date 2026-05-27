@@ -20,6 +20,7 @@ public class AgentEscapeState : StateMachineBehaviour
             agent = animator.GetComponent<Agent>();
         }
         agent.NavMeshAgent.speed = agent.EscapeSpeed;
+        agent.NavMeshAgent.isStopped = false;
         agent.NavMeshAgent.updateRotation = true;
         SetEscapeDestination();
     }

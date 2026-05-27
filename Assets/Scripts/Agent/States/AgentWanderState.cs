@@ -12,13 +12,10 @@ public class AgentWanderState : StateMachineBehaviour
         {
             agent = animator.GetComponent<Agent>();
         }
+        agent.NavMeshAgent.isStopped = false;
         agent.NavMeshAgent.updateRotation = true;
         agent.NavMeshAgent.SetDestination(GetNextDestination());
         agent.Target = null;
-    }
-
-    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

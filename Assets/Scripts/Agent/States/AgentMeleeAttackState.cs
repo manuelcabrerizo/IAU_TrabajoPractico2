@@ -21,7 +21,6 @@ public class AgentMeleeAttackState : StateMachineBehaviour
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        agent.NavMeshAgent.isStopped = false;
         agent.NavMeshAgent.updateRotation = true;
         agent.OnAction -= Punch;
     }

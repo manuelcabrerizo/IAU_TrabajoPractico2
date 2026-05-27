@@ -23,7 +23,6 @@ public class AgentRangeAttackState : StateMachineBehaviour
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         agent.OnAction -= Fire;
-        agent.NavMeshAgent.isStopped = false;
         agent.NavMeshAgent.updateRotation = true;
     }
 

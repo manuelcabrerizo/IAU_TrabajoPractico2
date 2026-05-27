@@ -263,6 +263,8 @@ MonoBehaviour:
   ShotDistance: 25
   BulletAnimationSpeed: 2
   ShotTransform: {fileID: 6999975920384449450}
+  NormalDamage: 3
+  MadDamage: 6
 --- !u!54 &-5903533303049008197
 Rigidbody:
   m_ObjectHideFlags: 0
