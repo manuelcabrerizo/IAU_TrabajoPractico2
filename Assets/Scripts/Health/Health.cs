@@ -14,9 +14,7 @@ public class Health : MonoBehaviour, IDamagable, IHealable
 
     private void Start()
     {
-        CurrentHealth = maxHealth;
-        OnHealthChange?.Invoke();
-        lifeBar.fillAmount = (float)CurrentHealth / maxHealth;
+        HealFull();
     }
 
     public void TakeDamage(int amount)
@@ -29,6 +27,13 @@ public class Health : MonoBehaviour, IDamagable, IHealable
     public void Heal(int amount)
     {
         CurrentHealth = Math.Min(CurrentHealth + amount, maxHealth);
+        OnHealthChange?.Invoke();
+        lifeBar.fillAmount = (float)CurrentHealth / maxHealth;
+    }
+
+    public void HealFull()
+    {
+        CurrentHealth = maxHealth;
         OnHealthChange?.Invoke();
         lifeBar.fillAmount = (float)CurrentHealth / maxHealth;
     }

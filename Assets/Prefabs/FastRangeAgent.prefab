@@ -256,13 +256,13 @@ MonoBehaviour:
   slowAreaLayerMask:
     serializedVersion: 2
     m_Bits: 128
+  TargetLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
   BulletPool: {fileID: 6252412290479555215}
   ShotDistance: 25
   BulletAnimationSpeed: 2
   ShotTransform: {fileID: 6999975920384449450}
-  TargetLayerMask:
-    serializedVersion: 2
-    m_Bits: 384
 --- !u!114 &6252412290479555215
 MonoBehaviour:
   m_ObjectHideFlags: 0

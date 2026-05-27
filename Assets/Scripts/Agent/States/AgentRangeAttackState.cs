@@ -7,7 +7,6 @@ public class AgentRangeAttackState : StateMachineBehaviour
     [SerializeField] private float escapeRadius = 5.0f;
 
     private RangeAgent agent = null;
-    private Transform attackTarget = null;
     private float rotationSpeed = 10.0f;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -15,10 +14,6 @@ public class AgentRangeAttackState : StateMachineBehaviour
         if (!agent)
         {
             agent = animator.GetComponent<Agent>() as RangeAgent;
-        }
-        if (!attackTarget)
-        {
-            attackTarget = FindAnyObjectByType<PlayerController>().transform;
         }
         agent.NavMeshAgent.isStopped = true;
         agent.NavMeshAgent.updateRotation = false;
@@ -34,12 +29,9 @@ public class AgentRangeAttackState : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //agent.DrawDebugSphere(agent.transform.position, escapeRadius, Color.green);
-        //agent.DrawDebugSphere(agent.transform.position, outOfReachRadius, Color.yellow);
-
         Vector3 position = agent.transform.position;
         position.y = 0.0f;
-        Vector3 target = attackTarget.position;
+        Vector3 target = agent.Target.position;
         target.y = 0.0f;
         Vector3 direction = (target - position).normalized;
         float angle = Mathf.Atan2(direction.x, direction.z);
@@ -92,7 +84,7 @@ public class AgentRangeAttackState : StateMachineBehaviour
     {
         Vector3 position = agent.transform.position;
         position.y = 0.0f;
-        Vector3 target = attackTarget.position;
+        Vector3 target = agent.Target.position;
         target.y = 0.0f;
         float sqrDistance = (target - position).sqrMagnitude;
         return sqrDistance > outOfReachRadius * outOfReachRadius;
@@ -102,7 +94,7 @@ public class AgentRangeAttackState : StateMachineBehaviour
     {
         Vector3 position = agent.transform.position;
         position.y = 0.0f;
-        Vector3 target = attackTarget.position;
+        Vector3 target = agent.Target.position;
         target.y = 0.0f;
         float sqrDistance = (target - position).sqrMagnitude;
         return sqrDistance <= escapeRadius * escapeRadius;

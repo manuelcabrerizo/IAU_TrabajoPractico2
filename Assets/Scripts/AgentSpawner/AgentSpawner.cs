@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class AgentSpawner : MonoBehaviour
@@ -14,10 +15,14 @@ public class AgentSpawner : MonoBehaviour
     [SerializeField] private float fastMeleeSpawnMaxTime = 10.0f;
     [SerializeField] private float fastRangeSpawnMinTime = 10.0f;
     [SerializeField] private float fastRangeSpawnMaxTime = 15.0f;
+    [SerializeField] private float npcSpawnMinTime = 20.0f;
+    [SerializeField] private float npcSpawnMaxTime = 40.0f;
     [SerializeField] private GameObjectPool meleePool;
     [SerializeField] private GameObjectPool rangePool;
     [SerializeField] private GameObjectPool fastMeleePool;
     [SerializeField] private GameObjectPool fastRangePool;
+    [SerializeField] private GameObjectPool npcPool;
+
     [SerializeField] private Transform[] spawnPoints;
 
     private TaskScheduler taskScheduler = null;
@@ -36,6 +41,8 @@ public class AgentSpawner : MonoBehaviour
         taskScheduler.Schedule(OnSpawnRange, Random.Range(rangeSpawnMinTime, rangeSpawnMaxTime));
         taskScheduler.Schedule(OnSpawFastMelee, Random.Range(fastMeleeSpawnMinTime, fastMeleeSpawnMaxTime));
         taskScheduler.Schedule(OnSpawnFastRange, Random.Range(fastRangeSpawnMinTime, fastRangeSpawnMaxTime));
+        taskScheduler.Schedule(OnSpawnNPC, Random.Range(npcSpawnMinTime, npcSpawnMaxTime));
+
     }
 
     private void OnDestroy()
@@ -55,6 +62,7 @@ public class AgentSpawner : MonoBehaviour
         rangePool.Free(agentKillEvent.GameObject);
         fastMeleePool.Free(agentKillEvent.GameObject);
         fastRangePool.Free(agentKillEvent.GameObject);
+        npcPool.Free(agentKillEvent.GameObject);
     }
 
     private void OnSpawnMelee()
@@ -66,7 +74,7 @@ public class AgentSpawner : MonoBehaviour
         }
         GameObject go = meleePool.Alloc(transform);
         IHealable healable = go.GetComponent<IHealable>();
-        healable.Heal(1000);
+        healable.HealFull();
         go.transform.position = GetRandomSpawnPoint();
         spawnedAgents.Add(go);
     }
@@ -80,7 +88,7 @@ public class AgentSpawner : MonoBehaviour
         }
         GameObject go = rangePool.Alloc(transform);
         IHealable healable = go.GetComponent<IHealable>();
-        healable.Heal(1000);
+        healable.HealFull();
         go.transform.position = GetRandomSpawnPoint();
         spawnedAgents.Add(go);
     }
@@ -94,7 +102,7 @@ public class AgentSpawner : MonoBehaviour
         }
         GameObject go = fastMeleePool.Alloc(transform);
         IHealable healable = go.GetComponent<IHealable>();
-        healable.Heal(1000);
+        healable.HealFull();
         go.transform.position = GetRandomSpawnPoint();
         spawnedAgents.Add(go);
     }
@@ -108,7 +116,21 @@ public class AgentSpawner : MonoBehaviour
         }
         GameObject go = fastRangePool.Alloc(transform);
         IHealable healable = go.GetComponent<IHealable>();
-        healable.Heal(1000);
+        healable.HealFull();
+        go.transform.position = GetRandomSpawnPoint();
+        spawnedAgents.Add(go);
+    }
+
+    private void OnSpawnNPC()
+    {
+        taskScheduler.Schedule(OnSpawnNPC, Random.Range(npcSpawnMinTime, npcSpawnMaxTime));
+        if (spawnedAgents.Count >= maxAgents)
+        {
+            return;
+        }
+        GameObject go = npcPool.Alloc(transform);
+        IHealable healable = go.GetComponent<IHealable>();
+        healable.HealFull();
         go.transform.position = GetRandomSpawnPoint();
         spawnedAgents.Add(go);
     }

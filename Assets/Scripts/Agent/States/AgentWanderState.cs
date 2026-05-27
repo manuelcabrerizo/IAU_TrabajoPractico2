@@ -5,7 +5,6 @@ public class AgentWanderState : StateMachineBehaviour
     [SerializeField] private float searchRadius = 10.0f;
 
     private Agent agent = null;
-    private Transform attackTarget = null;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -13,23 +12,22 @@ public class AgentWanderState : StateMachineBehaviour
         {
             agent = animator.GetComponent<Agent>();
         }
-        if (!attackTarget)
-        {
-            attackTarget = FindAnyObjectByType<PlayerController>().transform;
-        }
         agent.NavMeshAgent.updateRotation = true;
         agent.NavMeshAgent.SetDestination(GetNextDestination());
+        agent.Target = null;
+    }
+
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //agent.DrawDebugSphere(agent.transform.position, searchRadius, Color.green);
-
         if (agent.NavMeshAgent.remainingDistance <= agent.NavMeshAgent.stoppingDistance)
         {
             agent.NavMeshAgent.SetDestination(GetNextDestination());
         }
-        if (IsInChaseRange())
+        if (agent.Target != null && IsInChaseRange())
         {
             animator.SetBool("IsPlayerInChaseArea", true);
         }
@@ -37,7 +35,7 @@ public class AgentWanderState : StateMachineBehaviour
 
     private bool IsInChaseRange()
     {
-        float sqrDistance = (attackTarget.position - agent.transform.position).sqrMagnitude;
+        float sqrDistance = (agent.Target.position - agent.transform.position).sqrMagnitude;
         return sqrDistance <= searchRadius * searchRadius;
     }
 

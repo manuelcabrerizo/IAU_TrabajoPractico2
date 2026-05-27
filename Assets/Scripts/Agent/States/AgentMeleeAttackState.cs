@@ -6,7 +6,6 @@ public class AgentMeleeAttackState : StateMachineBehaviour
     [SerializeField] private float outOfReachRadius = 2.0f;
 
     private MeleeAgent agent = null;
-    private Transform attackTarget = null;
     private float rotationSpeed = 10.0f;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -14,10 +13,6 @@ public class AgentMeleeAttackState : StateMachineBehaviour
         if (!agent)
         {
             agent = animator.GetComponent<Agent>() as MeleeAgent;
-        }
-        if (!attackTarget)
-        {
-            attackTarget = FindAnyObjectByType<PlayerController>().transform;
         }
         agent.NavMeshAgent.isStopped = true;
         agent.NavMeshAgent.updateRotation = false;
@@ -37,7 +32,7 @@ public class AgentMeleeAttackState : StateMachineBehaviour
 
         Vector3 position = agent.transform.position;
         position.y = 0.0f;
-        Vector3 target = attackTarget.position;
+        Vector3 target = agent.Target.position;
         target.y = 0.0f;
         Vector3 direction = (target - position).normalized;
         float angle = Mathf.Atan2(direction.x, direction.z);
@@ -53,7 +48,7 @@ public class AgentMeleeAttackState : StateMachineBehaviour
 
     private void Punch()
     {
-        Collider[] colliders = Physics.OverlapSphere(agent.transform.position, 3.0f, agent.TargetLayerMask);
+        Collider[] colliders = Physics.OverlapSphere(agent.transform.position, 1.5f, agent.TargetLayerMask);
         foreach (Collider collider in colliders)
         {
             IDamagable damagable = collider.GetComponent<IDamagable>();
@@ -68,7 +63,7 @@ public class AgentMeleeAttackState : StateMachineBehaviour
     {
         Vector3 position = agent.transform.position;
         position.y = 0.0f;
-        Vector3 target = attackTarget.position;
+        Vector3 target = agent.Target.position;
         target.y = 0.0f;
         float sqrDistance = (target - position).sqrMagnitude;
         return sqrDistance > outOfReachRadius * outOfReachRadius;

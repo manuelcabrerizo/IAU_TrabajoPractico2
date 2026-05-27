@@ -1,8 +1,13 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+
+    [SerializeField] private int attackPower = 10;
+    [SerializeField] private float powerUpDuration = 10.0f;
     [SerializeField] private float speed = 5.0f;
     [SerializeField] private float slowSpeed = 2.5f;
     [SerializeField] private float shotDistance = 50.0f;
@@ -10,23 +15,51 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform shotTransform;
     [SerializeField] private LayerMask enemyLayerMask;
     [SerializeField] private LayerMask slowAreaLayerMask;
+    [SerializeField] private LayerMask npcLayerMask;
     [SerializeField] private GameObjectPool bulletPool;
 
     private CharacterController characterController = null;
     private Animator animator = null;
+    private TaskScheduler taskScheduler = null;
+    private int currentAttackPower = 0;
     private float currentSpeed = 0.0f;
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
+        taskScheduler = new TaskScheduler();
         currentSpeed = speed;
+        currentAttackPower = attackPower;
     }
 
     private void Update()
     {
+        taskScheduler.Tick(Time.deltaTime);
         ProcessMovement();
         ProcessShot();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
+        {
+            currentSpeed = slowSpeed;
+        }
+        if (((1 << other.gameObject.layer) & npcLayerMask) != 0)
+        {
+            EventBus.Raise<AgentKillEvent>(other.gameObject);
+            currentAttackPower = 1000;
+            taskScheduler.Schedule(OnPowerUpEnd, powerUpDuration);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
+        {
+            currentSpeed = speed;
+        }
     }
 
     private void ProcessMovement()
@@ -65,6 +98,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnPowerUpEnd()
+    {
+        currentAttackPower = attackPower;
+    }
+
     private IEnumerator Shot(TrailRenderer trailRenderer)
     {
         Vector3 direction = transform.forward;
@@ -76,7 +114,7 @@ public class PlayerController : MonoBehaviour
             IDamagable damagable = hit.collider.GetComponent<IDamagable>();
             if (damagable != null)
             {
-                damagable.TakeDamage(10);
+                damagable.TakeDamage(currentAttackPower);
             }
         }
         Vector3 targetPosition = shotTransform.position + (direction * shotDistance);
@@ -90,21 +128,4 @@ public class PlayerController : MonoBehaviour
         trailRenderer.Clear();
         bulletPool.Free(trailRenderer.gameObject);
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
-        {
-            currentSpeed = slowSpeed;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
-        {
-            currentSpeed = speed;
-        }
-    }
 }
-

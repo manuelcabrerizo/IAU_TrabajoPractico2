@@ -8,7 +8,6 @@ public class AgentChaseState : StateMachineBehaviour
     private float pathfindingTimer = 0.0f;
 
     private Agent agent = null;
-    private Transform attackTarget = null;
 
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -17,12 +16,8 @@ public class AgentChaseState : StateMachineBehaviour
         {
             agent = animator.GetComponent<Agent>();
         }
-        if (!attackTarget)
-        {
-            attackTarget = FindAnyObjectByType<PlayerController>().transform;
-        }
         agent.NavMeshAgent.updateRotation = true;
-        agent.NavMeshAgent.SetDestination(attackTarget.position);
+        agent.NavMeshAgent.SetDestination(agent.Target.position);
         pathfindingTimer = 0.0f;
     }
 
@@ -33,23 +28,27 @@ public class AgentChaseState : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //agent.DrawDebugSphere(agent.transform.position, attackRadius, Color.red);
-        //agent.DrawDebugSphere(agent.transform.position, outOfReachRadius, Color.yellow);
-
-        pathfindingTimer += Time.deltaTime;
-        if (pathfindingTimer >= pathfindingInterval)
+        if (agent.Target != null)
         {
-            agent.NavMeshAgent.SetDestination(attackTarget.position);
-            pathfindingTimer -= pathfindingInterval;
-        }
+            pathfindingTimer += Time.deltaTime;
+            if (pathfindingTimer >= pathfindingInterval)
+            {
 
-        if (IsOutOfRange())
+                agent.NavMeshAgent.SetDestination(agent.Target.position);
+                pathfindingTimer -= pathfindingInterval;
+            }
+            if (IsOutOfRange())
+            {
+                animator.SetBool("IsPlayerInChaseArea", false);
+            }
+            else if (IsInAttackRange())
+            {
+                animator.SetBool("IsPlayerInAttackArea", true);
+            }
+        }
+        else
         {
             animator.SetBool("IsPlayerInChaseArea", false);
-        }
-        else if (IsInAttackRange())
-        {
-            animator.SetBool("IsPlayerInAttackArea", true);
         }
     }
 
@@ -58,7 +57,7 @@ public class AgentChaseState : StateMachineBehaviour
         Vector3 position = agent.transform.position;
         position.y = 0.0f;
 
-        Vector3 target = attackTarget.position;
+        Vector3 target = agent.Target.position;
         target.y = 0.0f;
 
         float sqrDistance = (target - position).sqrMagnitude;
@@ -70,7 +69,7 @@ public class AgentChaseState : StateMachineBehaviour
         Vector3 position = agent.transform.position;
         position.y = 0.0f;
 
-        Vector3 target = attackTarget.position;
+        Vector3 target = agent.Target.position;
         target.y = 0.0f;
 
         float sqrDistance = (target - position).sqrMagnitude;
