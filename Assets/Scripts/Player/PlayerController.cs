@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform shotTransform;
     [SerializeField] private TrailRenderer bulletTrailPrefab;
     [SerializeField] private LayerMask enemyLayerMask;
+    [SerializeField] private GameObjectPool bulletPool;
 
     private CharacterController characterController = null;
     private Animator animator = null;
@@ -59,8 +60,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            // TODO: pool ...
-            StartCoroutine(Shot(Instantiate(bulletTrailPrefab)));
+            StartCoroutine(Shot(bulletPool.Alloc(bulletPool.transform).GetComponent<TrailRenderer>()));
         }
     }
 
@@ -70,9 +70,7 @@ public class PlayerController : MonoBehaviour
         direction.y = 0.0f;
         direction.Normalize();
         Vector3 startPosition = shotTransform.position;
-
-        RaycastHit hit;
-        if (Physics.Raycast(startPosition, direction, out hit, shotDistance, enemyLayerMask))
+        if (Physics.Raycast(startPosition, direction, out RaycastHit hit, shotDistance, enemyLayerMask))
         {
             IDamagable damagable = hit.collider.GetComponent<IDamagable>();
             if (damagable != null)
@@ -84,7 +82,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
         Vector3 targetPosition = shotTransform.position + (direction * shotDistance);
         float t = 0.0f;
         while (t <= 1.0f)
@@ -93,8 +90,8 @@ public class PlayerController : MonoBehaviour
             t += Time.deltaTime * bulletAnimationSpeed;
             yield return new WaitForEndOfFrame();
         }
-        // TODO: pool
-        Destroy(trailRenderer.gameObject);
+        trailRenderer.Clear();
+        bulletPool.Free(trailRenderer.gameObject);
     }
 }
 

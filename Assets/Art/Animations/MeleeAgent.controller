@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87301ff10d00674cb37c244a3e3c7de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outOfReachRadius: 10
+  outOfReachRadius: 15
   attackRadius: 1.5
 --- !u!1101 &-4425622098606829582
 AnimatorStateTransition:
@@ -286,4 +286,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53a64ff8aef68f041a9f9fbdb3a206ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  searchRadius: 5
+  searchRadius: 10
