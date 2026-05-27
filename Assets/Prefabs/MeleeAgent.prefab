@@ -223,15 +223,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f009fe0ca8d0147a4e81a347b6b54a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 4
-  SlowSpeed: 1.5
-  EscapeSpeed: 6
+  Speed: 2.5
+  SlowSpeed: 1
+  EscapeSpeed: 0
   slowAreaLayerMask:
     serializedVersion: 2
     m_Bits: 128
   TargetLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  Target: {fileID: 0}
 --- !u!54 &4517651447321573432
 Rigidbody:
   m_ObjectHideFlags: 0

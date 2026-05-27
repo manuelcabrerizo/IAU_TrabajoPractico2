@@ -22,6 +22,7 @@ public class AgentSpawner : MonoBehaviour
     [SerializeField] private GameObjectPool fastMeleePool;
     [SerializeField] private GameObjectPool fastRangePool;
     [SerializeField] private GameObjectPool npcPool;
+    [SerializeField] private GameObjectPool agentBulletPool;
 
     [SerializeField] private Transform[] spawnPoints;
 
@@ -89,6 +90,8 @@ public class AgentSpawner : MonoBehaviour
         GameObject go = rangePool.Alloc(transform);
         IHealable healable = go.GetComponent<IHealable>();
         healable.HealFull();
+        RangeAgent rangeAgent = go.GetComponent<RangeAgent>();
+        rangeAgent.BulletPool = agentBulletPool;
         go.transform.position = GetRandomSpawnPoint();
         spawnedAgents.Add(go);
     }
@@ -117,6 +120,8 @@ public class AgentSpawner : MonoBehaviour
         GameObject go = fastRangePool.Alloc(transform);
         IHealable healable = go.GetComponent<IHealable>();
         healable.HealFull();
+        RangeAgent rangeAgent = go.GetComponent<RangeAgent>();
+        rangeAgent.BulletPool = agentBulletPool;
         go.transform.position = GetRandomSpawnPoint();
         spawnedAgents.Add(go);
     }

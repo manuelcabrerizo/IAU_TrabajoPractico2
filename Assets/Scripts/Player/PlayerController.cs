@@ -42,11 +42,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
+        if (Utils.TestLayer(other.gameObject, slowAreaLayerMask))
         {
             currentSpeed = slowSpeed;
         }
-        if (((1 << other.gameObject.layer) & npcLayerMask) != 0)
+        if (Utils.TestLayer(other.gameObject, npcLayerMask))
         {
             EventBus.Raise<AgentKillEvent>(other.gameObject);
             currentAttackPower = 1000;
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
+        if (Utils.TestLayer(other.gameObject, slowAreaLayerMask))
         {
             currentSpeed = speed;
         }

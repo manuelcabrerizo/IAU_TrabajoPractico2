@@ -537,6 +537,7 @@ MonoBehaviour:
   fastMeleePool: {fileID: 55129379}
   fastRangePool: {fileID: 55129378}
   npcPool: {fileID: 55129380}
+  agentBulletPool: {fileID: 6254346485471079442}
   spawnPoints:
   - {fileID: 1851071433}
   - {fileID: 602856305}
@@ -11822,6 +11823,21 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22304bf2fb25408459a4669936c7aea2, type: 3}
+--- !u!4 &2445057438355667072
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8674858517325631084}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &5811726276305027003
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11895,6 +11911,19 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 91ad7d59efca062458e14bd78a14fd33, type: 3}
+--- !u!114 &6254346485471079442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8674858517325631084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3fe3db785217e9428ca36823262c6d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 4129016855917091308, guid: b5b8e531f6fb5144e9f0f80e9b557796, type: 3}
 --- !u!1001 &7256112299138181886
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11952,6 +11981,23 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2385eee0c1c5ae64ba583e9baeeb5795, type: 3}
+--- !u!1 &8674858517325631084
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2445057438355667072}
+  - component: {fileID: 6254346485471079442}
+  m_Layer: 0
+  m_Name: AgentBulletSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -11967,3 +12013,4 @@ SceneRoots:
   - {fileID: 1949932810}
   - {fileID: 1982799629}
   - {fileID: 1011072391}
+  - {fileID: 2445057438355667072}

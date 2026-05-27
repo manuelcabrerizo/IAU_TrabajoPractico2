@@ -131,7 +131,6 @@ GameObject:
   - component: {fileID: 2767605312206820886}
   - component: {fileID: 2378288646616910342}
   - component: {fileID: 3223244373026639165}
-  - component: {fileID: 6252412290479555215}
   - component: {fileID: -5903533303049008197}
   m_Layer: 9
   m_Name: FastRangeAgent
@@ -189,7 +188,7 @@ Animator:
   m_GameObject: {fileID: 1755507046490809770}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 76624c544f36ba443bc5aed2d142ea08, type: 3}
-  m_Controller: {fileID: 9100000, guid: 741490ddb93c45c40af2897a08764245, type: 2}
+  m_Controller: {fileID: 9100000, guid: 36b67b5e478bed144b066437b3e8179d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -250,32 +249,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21d074aa0ed0ac44cafc507fc0e8ba00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 8
+  Speed: 6
   SlowSpeed: 1.5
-  EscapeSpeed: 10
+  EscapeSpeed: 7
   slowAreaLayerMask:
     serializedVersion: 2
     m_Bits: 128
   TargetLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  BulletPool: {fileID: 6252412290479555215}
+  Target: {fileID: 0}
+  BulletPool: {fileID: 0}
   ShotDistance: 25
   BulletAnimationSpeed: 2
   ShotTransform: {fileID: 6999975920384449450}
---- !u!114 &6252412290479555215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1755507046490809770}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3fe3db785217e9428ca36823262c6d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 4129016855917091308, guid: b5b8e531f6fb5144e9f0f80e9b557796, type: 3}
 --- !u!54 &-5903533303049008197
 Rigidbody:
   m_ObjectHideFlags: 0

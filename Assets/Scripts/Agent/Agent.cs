@@ -46,7 +46,7 @@ public class Agent : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
+        if (Utils.TestLayer(other.gameObject, slowAreaLayerMask))
         {
             navMeshAgent.speed = SlowSpeed;
         }
@@ -54,7 +54,7 @@ public class Agent : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
+        if (Utils.TestLayer(other.gameObject, slowAreaLayerMask))
         {
             navMeshAgent.speed = SlowSpeed;
         }
@@ -62,7 +62,7 @@ public class Agent : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
+        if (Utils.TestLayer(other.gameObject, slowAreaLayerMask))
         {
             navMeshAgent.speed = Speed;
         }
