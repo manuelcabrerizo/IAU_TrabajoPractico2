@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,7 +9,7 @@ public class Agent : MonoBehaviour
     [SerializeField] public float Speed = 4;
     [SerializeField] public float SlowSpeed = 1.5f;
     [SerializeField] public float EscapeSpeed = 6.0f;
-    [SerializeField] private LayerMask slowAreaLayerMask;
+    [SerializeField] protected LayerMask slowAreaLayerMask;
     [SerializeField] public LayerMask TargetLayerMask;
 
     public NavMeshAgent NavMeshAgent => navMeshAgent;
@@ -18,9 +17,9 @@ public class Agent : MonoBehaviour
     public bool IsMad { get; set; } = false;
 
 
-    private Health health = null;
-    private Animator animator = null;
-    private NavMeshAgent navMeshAgent = null;
+    protected Health health = null;
+    protected Animator animator = null;
+    protected NavMeshAgent navMeshAgent = null;
 
     public Action OnAction;
 
@@ -32,7 +31,10 @@ public class Agent : MonoBehaviour
 
         health.OnHealthChange += OnHealthChange;
         navMeshAgent.speed = Speed;
+
+        OnAwake();
     }
+
 
     private void OnDestroy()
     {
@@ -42,6 +44,7 @@ public class Agent : MonoBehaviour
     private void Update()
     {
         SearchTarget();
+        OnUpdate();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -92,4 +95,7 @@ public class Agent : MonoBehaviour
             break;
         }
     }
+
+    protected virtual void OnAwake() { }
+    protected virtual void OnUpdate() { }
 }

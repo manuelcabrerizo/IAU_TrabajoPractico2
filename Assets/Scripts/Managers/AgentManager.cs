@@ -18,11 +18,13 @@ public class AgentManager : MonoBehaviour
     [SerializeField] private float fastRangeSpawnMaxTime = 15.0f;
     [SerializeField] private float npcSpawnMinTime = 20.0f;
     [SerializeField] private float npcSpawnMaxTime = 40.0f;
+    [SerializeField] private float eliteSpawnTime = 50.0f;
     [SerializeField] private GameObjectPool meleePool;
     [SerializeField] private GameObjectPool rangePool;
     [SerializeField] private GameObjectPool fastMeleePool;
     [SerializeField] private GameObjectPool fastRangePool;
     [SerializeField] private GameObjectPool npcPool;
+    [SerializeField] private GameObjectPool elitePool;
     [SerializeField] private GameObjectPool agentBulletPool;
 
     [SerializeField] private Transform[] spawnPoints;
@@ -44,6 +46,7 @@ public class AgentManager : MonoBehaviour
         taskScheduler.Schedule(OnSpawFastMelee, Random.Range(fastMeleeSpawnMinTime, fastMeleeSpawnMaxTime));
         taskScheduler.Schedule(OnSpawnFastRange, Random.Range(fastRangeSpawnMinTime, fastRangeSpawnMaxTime));
         taskScheduler.Schedule(OnSpawnNPC, Random.Range(npcSpawnMinTime, npcSpawnMaxTime));
+        taskScheduler.Schedule(OnSpawnElite, eliteSpawnTime);
     }
 
     private void OnDestroy()
@@ -85,6 +88,7 @@ public class AgentManager : MonoBehaviour
         fastMeleePool.Free(agentKillEvent.GameObject);
         fastRangePool.Free(agentKillEvent.GameObject);
         npcPool.Free(agentKillEvent.GameObject);
+        elitePool.Free(agentKillEvent.GameObject);
     }
 
     private void OnNpcAgentKill(in NpcAgenKillEvent npcAgenKillEvent)
@@ -173,6 +177,23 @@ public class AgentManager : MonoBehaviour
         go.GetComponent<Collider>().enabled = true;
         IHealable healable = go.GetComponent<IHealable>();
         healable.HealFull();
+        go.transform.position = GetRandomSpawnPoint();
+        spawnedAgents.Add(go);
+    }
+
+    private void OnSpawnElite()
+    {
+        taskScheduler.Schedule(OnSpawnElite, eliteSpawnTime);
+        if (spawnedAgents.Count >= maxAgents)
+        {
+            return;
+        }
+        GameObject go = elitePool.Alloc(transform);
+        go.GetComponent<Collider>().enabled = true;
+        IHealable healable = go.GetComponent<IHealable>();
+        healable.HealFull();
+        EliteAgent eliteAgent = go.GetComponent<EliteAgent>();
+        eliteAgent.IsMad = false;
         go.transform.position = GetRandomSpawnPoint();
         spawnedAgents.Add(go);
     }

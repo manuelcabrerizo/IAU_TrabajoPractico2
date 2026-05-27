@@ -486,6 +486,7 @@ GameObject:
   - component: {fileID: 55129379}
   - component: {fileID: 55129378}
   - component: {fileID: 55129380}
+  - component: {fileID: 55129381}
   m_Layer: 0
   m_Name: AgentManager
   m_TagString: Untagged
@@ -532,11 +533,13 @@ MonoBehaviour:
   fastRangeSpawnMaxTime: 15
   npcSpawnMinTime: 20
   npcSpawnMaxTime: 40
+  eliteSpawnTime: 40
   meleePool: {fileID: 55129376}
   rangePool: {fileID: 55129377}
   fastMeleePool: {fileID: 55129379}
   fastRangePool: {fileID: 55129378}
   npcPool: {fileID: 55129380}
+  elitePool: {fileID: 55129381}
   agentBulletPool: {fileID: 6254346485471079442}
   spawnPoints:
   - {fileID: 1851071433}
@@ -610,6 +613,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 1755507046490809770, guid: 681e326a291ee094997f45a12d8c8d9a, type: 3}
+--- !u!114 &55129381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 55129373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3fe3db785217e9428ca36823262c6d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 2504857840814717233, guid: aeeb0bc53f35c0a4b964f5e8576aa6d0, type: 3}
 --- !u!1 &95773768
 GameObject:
   m_ObjectHideFlags: 0

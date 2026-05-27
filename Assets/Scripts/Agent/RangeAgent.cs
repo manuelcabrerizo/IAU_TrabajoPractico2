@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RangeAgent : Agent
+public class RangeAgent : EnemyAgent
 {
     [SerializeField] public GameObjectPool BulletPool;
     [SerializeField] public float ShotDistance = 50.0f;
