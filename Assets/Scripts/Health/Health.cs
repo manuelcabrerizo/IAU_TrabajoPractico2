@@ -11,6 +11,7 @@ public class Health : MonoBehaviour, IDamagable, IHealable
     public Action OnHealthChange;
 
     public bool IsAlive => CurrentHealth > 0;
+    public float HealthRation => (float)CurrentHealth / (float)maxHealth;
 
     private void Start()
     {

@@ -15,12 +15,12 @@ public class Agent : MonoBehaviour
 
     public NavMeshAgent NavMeshAgent => navMeshAgent;
     public Transform Target = null;
+    public bool IsMad { get; set; } = false;
+
 
     private Health health = null;
     private Animator animator = null;
     private NavMeshAgent navMeshAgent = null;
-
-
 
     public Action OnAction;
 

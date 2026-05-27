@@ -29,13 +29,15 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        EventBus.Subscribe<OnAmmoPickUpEvent>(OnAmmoPickUp);
-        EventBus.Subscribe<OnHealthPickUpEvent>(OnHealthPickUp);
-
         characterController = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
         health = GetComponent<Health>();
         ammo = GetComponent<Ammo>();
+
+        EventBus.Subscribe<OnAmmoPickUpEvent>(OnAmmoPickUp);
+        EventBus.Subscribe<OnHealthPickUpEvent>(OnHealthPickUp);
+        health.OnHealthChange += OnHealthChange;
+
         taskScheduler = new TaskScheduler();
         currentSpeed = speed;
         currentAttackPower = attackPower;
@@ -45,6 +47,7 @@ public class PlayerController : MonoBehaviour
     {
         EventBus.Unsubscribe<OnAmmoPickUpEvent>(OnAmmoPickUp);
         EventBus.Unsubscribe<OnHealthPickUpEvent>(OnHealthPickUp);
+        health.OnHealthChange -= OnHealthChange;
     }
 
     private void Update()
@@ -90,6 +93,23 @@ public class PlayerController : MonoBehaviour
     private void OnHealthPickUp(in OnHealthPickUpEvent callback)
     {
         health.HealFull();
+    }
+
+    private void OnHealthChange()
+    {
+        if (health.HealthRation < 0.4f)
+        {
+            EventBus.Raise<OnLowHealthEvent>();
+        }
+        else
+        {
+            EventBus.Raise<OnHightHealthEvent>();
+        }
+
+        if (!health.IsAlive)
+        {
+            EventBus.Raise<OnPlayerDieEvent>();
+        }
     }
 
     private void ProcessMovement()

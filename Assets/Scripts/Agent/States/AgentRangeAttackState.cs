@@ -65,7 +65,8 @@ public class AgentRangeAttackState : StateMachineBehaviour
             IDamagable damagable = hit.collider.GetComponent<IDamagable>();
             if (damagable != null)
             {
-                damagable.TakeDamage(10);
+                int damage = agent.IsMad ? agent.MadDamage : agent.NormalDamage;
+                damagable.TakeDamage(damage);
             }
         }
         Vector3 targetPosition = agent.ShotTransform.position + (direction * agent.ShotDistance);

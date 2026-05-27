@@ -28,8 +28,6 @@ public class AgentMeleeAttackState : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //agent.DrawDebugSphere(agent.transform.position, outOfReachRadius, Color.yellow);
-
         Vector3 position = agent.transform.position;
         position.y = 0.0f;
         Vector3 target = agent.Target.position;
@@ -54,7 +52,8 @@ public class AgentMeleeAttackState : StateMachineBehaviour
             IDamagable damagable = collider.GetComponent<IDamagable>();
             if (damagable != null)
             {
-                damagable.TakeDamage(10);
+                int damage = agent.IsMad ? agent.MadDamage : agent.NormalDamage;
+                damagable.TakeDamage(damage);
             }
         }
     }

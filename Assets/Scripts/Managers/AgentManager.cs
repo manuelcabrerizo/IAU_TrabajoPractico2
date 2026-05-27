@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class AgentSpawner : MonoBehaviour
+public class AgentManager : MonoBehaviour
 {
     EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
@@ -28,16 +28,15 @@ public class AgentSpawner : MonoBehaviour
 
     private TaskScheduler taskScheduler = null;
     private List<GameObject> spawnedAgents = null;
+    private bool lastMadValue = true;
 
     private void Awake()
     {
         taskScheduler = new TaskScheduler();
         spawnedAgents = new List<GameObject>();
-    }
-
-    private void Start()
-    {
         EventBus.Subscribe<AgentKillEvent>(OnAgentKill);
+        EventBus.Subscribe<OnLowHealthEvent>(OnLowHealth);
+        EventBus.Subscribe<OnHightHealthEvent>(OnHightHealth);
         taskScheduler.Schedule(OnSpawnMelee, Random.Range(meleeSpawnMinTime, meleeSpawnMaxTime));
         taskScheduler.Schedule(OnSpawnRange, Random.Range(rangeSpawnMinTime, rangeSpawnMaxTime));
         taskScheduler.Schedule(OnSpawFastMelee, Random.Range(fastMeleeSpawnMinTime, fastMeleeSpawnMaxTime));
@@ -48,11 +47,31 @@ public class AgentSpawner : MonoBehaviour
     private void OnDestroy()
     {
         EventBus.Unsubscribe<AgentKillEvent>(OnAgentKill);
+        EventBus.Unsubscribe<OnLowHealthEvent>(OnLowHealth);
+        EventBus.Unsubscribe<OnHightHealthEvent>(OnHightHealth);
     }
 
     private void Update()
     {
         taskScheduler.Tick(Time.deltaTime);
+    }
+
+    private void OnHightHealth(in OnHightHealthEvent callback)
+    {
+        if (lastMadValue)
+        {
+            SetIsMad(false);
+            lastMadValue = false;
+        }
+    }
+
+    private void OnLowHealth(in OnLowHealthEvent callback)
+    {
+        if (!lastMadValue)
+        {
+            SetIsMad(true);
+            lastMadValue = true;
+        }
     }
 
     private void OnAgentKill(in AgentKillEvent agentKillEvent)
@@ -76,6 +95,8 @@ public class AgentSpawner : MonoBehaviour
         go.GetComponent<Collider>().enabled = true;
         IHealable healable = go.GetComponent<IHealable>();
         healable.HealFull();
+        MeleeAgent meleeAgent = go.GetComponent<MeleeAgent>();
+        meleeAgent.IsMad = false;
         go.transform.position = GetRandomSpawnPoint();
         spawnedAgents.Add(go);
     }
@@ -93,6 +114,7 @@ public class AgentSpawner : MonoBehaviour
         healable.HealFull();
         RangeAgent rangeAgent = go.GetComponent<RangeAgent>();
         rangeAgent.BulletPool = agentBulletPool;
+        rangeAgent.IsMad = false;
         go.transform.position = GetRandomSpawnPoint();
         spawnedAgents.Add(go);
     }
@@ -108,6 +130,8 @@ public class AgentSpawner : MonoBehaviour
         go.GetComponent<Collider>().enabled = true;
         IHealable healable = go.GetComponent<IHealable>();
         healable.HealFull();
+        MeleeAgent meleeAgent = go.GetComponent<MeleeAgent>();
+        meleeAgent.IsMad = false;
         go.transform.position = GetRandomSpawnPoint();
         spawnedAgents.Add(go);
     }
@@ -125,6 +149,7 @@ public class AgentSpawner : MonoBehaviour
         healable.HealFull();
         RangeAgent rangeAgent = go.GetComponent<RangeAgent>();
         rangeAgent.BulletPool = agentBulletPool;
+        rangeAgent.IsMad = false;
         go.transform.position = GetRandomSpawnPoint();
         spawnedAgents.Add(go);
     }
@@ -149,5 +174,16 @@ public class AgentSpawner : MonoBehaviour
         if(spawnPoints.Length == 0)
             return Vector3.zero;
         return spawnPoints[Random.Range(0, spawnPoints.Length)].position;
+    }
+
+    private void SetIsMad(bool value)
+    {
+        foreach (GameObject go in spawnedAgents)
+        {
+            if (go.TryGetComponent<Agent>(out Agent agent))
+            {
+                agent.IsMad = value;
+            }
+        }
     }
 }
