@@ -73,12 +73,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
+  slowSpeed: 1.5
   shotDistance: 25
   bulletAnimationSpeed: 2
   shotTransform: {fileID: 1400689569564536679}
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 640
+  slowAreaLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
   bulletPool: {fileID: 0}
 --- !u!114 &7248984810884874461
 MonoBehaviour:

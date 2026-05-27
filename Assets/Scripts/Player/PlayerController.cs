@@ -4,19 +4,23 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed = 5.0f;
+    [SerializeField] private float slowSpeed = 2.5f;
     [SerializeField] private float shotDistance = 50.0f;
     [SerializeField] private float bulletAnimationSpeed = 1.0f;
     [SerializeField] private Transform shotTransform;
     [SerializeField] private LayerMask enemyLayerMask;
+    [SerializeField] private LayerMask slowAreaLayerMask;
     [SerializeField] private GameObjectPool bulletPool;
 
     private CharacterController characterController = null;
     private Animator animator = null;
+    private float currentSpeed = 0.0f;
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
+        currentSpeed = speed;
     }
 
     private void Update()
@@ -46,9 +50,9 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0.0f, Mathf.Rad2Deg * angle, 0.0f);
 
         Vector3 movement = new Vector3(horizaontal, 0.0f, vertical);
-        characterController.Move(movement.normalized * speed * Time.deltaTime);
+        characterController.Move(movement.normalized * currentSpeed * Time.deltaTime);
 
-        Vector3 localVelocity = (transform.worldToLocalMatrix * characterController.velocity) / speed;
+        Vector3 localVelocity = (transform.worldToLocalMatrix * characterController.velocity) / currentSpeed;
         animator.SetFloat("VelocityZ", localVelocity.z);
         animator.SetFloat("VelocityX", localVelocity.x);
     }
@@ -85,6 +89,22 @@ public class PlayerController : MonoBehaviour
         }
         trailRenderer.Clear();
         bulletPool.Free(trailRenderer.gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
+        {
+            currentSpeed = slowSpeed;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
+        {
+            currentSpeed = speed;
+        }
     }
 }
 

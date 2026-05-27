@@ -8,8 +8,9 @@ public class Agent : MonoBehaviour
     EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
     [SerializeField] public float Speed = 4;
+    [SerializeField] public float SlowSpeed = 1.5f;
     [SerializeField] public float EscapeSpeed = 6.0f;
-    [SerializeField] public bool CanJump = false;
+    [SerializeField] private LayerMask slowAreaLayerMask;
 
     private Health health = null;
     private Animator animator = null;
@@ -26,13 +27,35 @@ public class Agent : MonoBehaviour
 
         health.OnHealthChange += OnHealthChange;
         navMeshAgent.speed = Speed;
-        OnAwaken();
     }
 
     private void OnDestroy()
     {
-        OnDestroyed();
         health.OnHealthChange -= OnHealthChange;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
+        {
+            navMeshAgent.speed = SlowSpeed;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
+        {
+            navMeshAgent.speed = SlowSpeed;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (((1 << other.gameObject.layer) & slowAreaLayerMask) != 0)
+        {
+            navMeshAgent.speed = Speed;
+        }
     }
 
     private void OnHealthChange()
@@ -49,9 +72,6 @@ public class Agent : MonoBehaviour
     {
         OnAction?.Invoke();
     }
-
-    protected virtual void OnAwaken() { }
-    protected virtual void OnDestroyed() { }
 }
 
 
