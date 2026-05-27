@@ -43,7 +43,6 @@ public class AgentSpawner : MonoBehaviour
         taskScheduler.Schedule(OnSpawFastMelee, Random.Range(fastMeleeSpawnMinTime, fastMeleeSpawnMaxTime));
         taskScheduler.Schedule(OnSpawnFastRange, Random.Range(fastRangeSpawnMinTime, fastRangeSpawnMaxTime));
         taskScheduler.Schedule(OnSpawnNPC, Random.Range(npcSpawnMinTime, npcSpawnMaxTime));
-
     }
 
     private void OnDestroy()
@@ -74,6 +73,7 @@ public class AgentSpawner : MonoBehaviour
             return;
         }
         GameObject go = meleePool.Alloc(transform);
+        go.GetComponent<Collider>().enabled = true;
         IHealable healable = go.GetComponent<IHealable>();
         healable.HealFull();
         go.transform.position = GetRandomSpawnPoint();
@@ -88,6 +88,7 @@ public class AgentSpawner : MonoBehaviour
             return;
         }
         GameObject go = rangePool.Alloc(transform);
+        go.GetComponent<Collider>().enabled = true;
         IHealable healable = go.GetComponent<IHealable>();
         healable.HealFull();
         RangeAgent rangeAgent = go.GetComponent<RangeAgent>();
@@ -104,6 +105,7 @@ public class AgentSpawner : MonoBehaviour
             return;
         }
         GameObject go = fastMeleePool.Alloc(transform);
+        go.GetComponent<Collider>().enabled = true;
         IHealable healable = go.GetComponent<IHealable>();
         healable.HealFull();
         go.transform.position = GetRandomSpawnPoint();
@@ -118,6 +120,7 @@ public class AgentSpawner : MonoBehaviour
             return;
         }
         GameObject go = fastRangePool.Alloc(transform);
+        go.GetComponent<Collider>().enabled = true;
         IHealable healable = go.GetComponent<IHealable>();
         healable.HealFull();
         RangeAgent rangeAgent = go.GetComponent<RangeAgent>();
@@ -134,6 +137,7 @@ public class AgentSpawner : MonoBehaviour
             return;
         }
         GameObject go = npcPool.Alloc(transform);
+        go.GetComponent<Collider>().enabled = true;
         IHealable healable = go.GetComponent<IHealable>();
         healable.HealFull();
         go.transform.position = GetRandomSpawnPoint();

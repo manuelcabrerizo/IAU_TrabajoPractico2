@@ -7,13 +7,15 @@ public class UIManager : MonoBehaviour
     EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
     [SerializeField] private TMP_Text scoreText;
+    [SerializeField] private TMP_Text ammoText;
     [SerializeField] private TMP_Text powerUpText;
 
-    private void Start()
+    private void Awake()
     {
         EventBus.Subscribe<OnScoreChangeEvent>(OnScoreChange);
         EventBus.Subscribe<OnPowerUpGrabEvent>(OnPowerGrab);
         EventBus.Subscribe<OnPowerUpEndEvent>(OnPowerUpEnd);
+        EventBus.Subscribe<OnAmmoChangeEvent>(OnAmmoChange);
     }
 
     private void OnDestroy()
@@ -21,6 +23,12 @@ public class UIManager : MonoBehaviour
         EventBus.Unsubscribe<OnScoreChangeEvent>(OnScoreChange);
         EventBus.Unsubscribe<OnPowerUpGrabEvent>(OnPowerGrab);
         EventBus.Unsubscribe<OnPowerUpEndEvent>(OnPowerUpEnd);
+        EventBus.Unsubscribe<OnAmmoChangeEvent>(OnAmmoChange);
+    }
+
+    private void OnAmmoChange(in OnAmmoChangeEvent onAmmoChangeEvent)
+    {
+        ammoText.text = "Ammo: " + onAmmoChangeEvent.Ammo + " | " + onAmmoChangeEvent.Magazines;
     }
 
     private void OnPowerUpEnd(in OnPowerUpEndEvent onPowerUpEndEvent)

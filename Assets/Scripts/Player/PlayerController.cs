@@ -16,8 +16,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask enemyLayerMask;
     [SerializeField] private LayerMask slowAreaLayerMask;
     [SerializeField] private LayerMask npcLayerMask;
+    [SerializeField] private LayerMask pickUpMask;
     [SerializeField] private GameObjectPool bulletPool;
 
+    private Health health = null;
+    private Ammo ammo = null;
     private CharacterController characterController = null;
     private Animator animator = null;
     private TaskScheduler taskScheduler = null;
@@ -26,11 +29,22 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        EventBus.Subscribe<OnAmmoPickUpEvent>(OnAmmoPickUp);
+        EventBus.Subscribe<OnHealthPickUpEvent>(OnHealthPickUp);
+
         characterController = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
+        health = GetComponent<Health>();
+        ammo = GetComponent<Ammo>();
         taskScheduler = new TaskScheduler();
         currentSpeed = speed;
         currentAttackPower = attackPower;
+    }
+
+    private void OnDestroy()
+    {
+        EventBus.Unsubscribe<OnAmmoPickUpEvent>(OnAmmoPickUp);
+        EventBus.Unsubscribe<OnHealthPickUpEvent>(OnHealthPickUp);
     }
 
     private void Update()
@@ -46,12 +60,17 @@ public class PlayerController : MonoBehaviour
         {
             currentSpeed = slowSpeed;
         }
-        if (Utils.TestLayer(other.gameObject, npcLayerMask))
+        else if (Utils.TestLayer(other.gameObject, npcLayerMask))
         {
             EventBus.Raise<AgentKillEvent>(other.gameObject);
             EventBus.Raise<OnPowerUpGrabEvent>();
             currentAttackPower = 1000;
             taskScheduler.Schedule(OnPowerUpEnd, powerUpDuration);
+        }
+        else if (Utils.TestLayer(other.gameObject, pickUpMask))
+        {
+            IPickable pickable = other.gameObject.GetComponent<IPickable>();
+            pickable.PickUp();
         }
     }
 
@@ -61,6 +80,16 @@ public class PlayerController : MonoBehaviour
         {
             currentSpeed = speed;
         }
+    }
+
+    private void OnAmmoPickUp(in OnAmmoPickUpEvent callback)
+    {
+        ammo.LoadMagazine();
+    }
+
+    private void OnHealthPickUp(in OnHealthPickUpEvent callback)
+    {
+        health.HealFull();
     }
 
     private void ProcessMovement()
@@ -93,9 +122,13 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessShot()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && ammo.HasAmmo())
         {
             StartCoroutine(Shot(bulletPool.Alloc(bulletPool.transform).GetComponent<TrailRenderer>()));
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ammo.Reload();
         }
     }
 

@@ -12,6 +12,7 @@ public class AgentDeathState : StateMachineBehaviour
             agent = animator.GetComponent<Agent>();
         }
         agent.NavMeshAgent.isStopped = true;
+        agent.gameObject.GetComponent<Collider>().enabled = false;
         EventBus.Raise<AgentDeadStateEnteredEvent>();
     }
 }
