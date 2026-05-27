@@ -25,6 +25,7 @@ public class AgentEscapeState : StateMachineBehaviour
             attackTarget = FindAnyObjectByType<PlayerController>().transform;
         }
         agent.NavMeshAgent.speed = 5.0f;
+        agent.NavMeshAgent.updateRotation = true;
         SetEscapeDestination();
     }
 

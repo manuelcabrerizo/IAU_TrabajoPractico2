@@ -21,6 +21,7 @@ public class AgentChaseState : StateMachineBehaviour
         {
             attackTarget = FindAnyObjectByType<PlayerController>().transform;
         }
+        agent.NavMeshAgent.updateRotation = true;
         agent.NavMeshAgent.SetDestination(attackTarget.position);
         pathfindingTimer = 0.0f;
     }

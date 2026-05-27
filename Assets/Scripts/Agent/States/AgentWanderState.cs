@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class AgentWanderState : StateMachineBehaviour
 {
@@ -18,6 +17,7 @@ public class AgentWanderState : StateMachineBehaviour
         {
             attackTarget = FindAnyObjectByType<PlayerController>().transform;
         }
+        agent.NavMeshAgent.updateRotation = true;
         agent.NavMeshAgent.SetDestination(GetNextDestination());
     }
 
