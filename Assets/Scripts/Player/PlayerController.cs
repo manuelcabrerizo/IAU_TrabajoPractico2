@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
         taskScheduler = new TaskScheduler();
         currentSpeed = speed;
         currentAttackPower = attackPower;
+        animator.SetBool("IsAlive", true);
     }
 
     private void OnDestroy()
@@ -53,8 +54,11 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         taskScheduler.Tick(Time.deltaTime);
-        ProcessMovement();
-        ProcessShot();
+        if (health.IsAlive)
+        {
+            ProcessMovement();
+            ProcessShot();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -108,8 +112,13 @@ public class PlayerController : MonoBehaviour
 
         if (!health.IsAlive)
         {
-            EventBus.Raise<OnPlayerDieEvent>();
+            animator.SetBool("IsAlive", false);
         }
+    }
+
+    public void OnDeathAnimationFinish()
+    {
+        EventBus.Raise<OnPlayerDieEvent>();
     }
 
     private void ProcessMovement()

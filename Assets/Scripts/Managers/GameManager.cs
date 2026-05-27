@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerDie(in OnPlayerDieEvent onPlayerDieEvent)
     {
-        // TODO: GameOver screen
+        SceneManager.LoadScene("GameOver");
     }
 
     private void OnAgentDeadStateEntered(in AgentDeadStateEnteredEvent agentDeadStateEnteredEvent)
