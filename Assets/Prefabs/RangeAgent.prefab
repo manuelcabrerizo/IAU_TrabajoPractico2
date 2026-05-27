@@ -264,7 +264,7 @@ MonoBehaviour:
   BulletAnimationSpeed: 2
   ShotTransform: {fileID: 6999975920384449450}
   NormalDamage: 3
-  MadDamage: 6
+  MadDamage: 8
 --- !u!54 &6984661195738684579
 Rigidbody:
   m_ObjectHideFlags: 0

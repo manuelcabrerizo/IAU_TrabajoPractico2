@@ -4,12 +4,18 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+    Stats Stats => ServiceProvider.Instance.GetService<Stats>();
 
     private int score = 0;
 
     private void Awake()
     {
+        if (!ServiceProvider.Instance.ContainsService<Stats>())
+        {
+            ServiceProvider.Instance.AddService<Stats>(new Stats());
+        }
         ServiceProvider.Instance.AddService<EventBus>(new EventBus());
+        
         EventBus.Subscribe<OnPlayerDieEvent>(OnPlayerDie);
         EventBus.Subscribe<AgentDeadStateEnteredEvent>(OnAgentDeadStateEntered);
     }
@@ -22,6 +28,7 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerDie(in OnPlayerDieEvent onPlayerDieEvent)
     {
+        Stats.Score = score;
         SceneManager.LoadScene("GameOver");
     }
 
