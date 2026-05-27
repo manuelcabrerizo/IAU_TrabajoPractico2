@@ -24,21 +24,20 @@ public class AgentEscapeState : StateMachineBehaviour
         {
             attackTarget = FindAnyObjectByType<PlayerController>().transform;
         }
-        agent.NavMeshAgent.speed = 5.0f;
+        agent.NavMeshAgent.speed = agent.EscapeSpeed;
         agent.NavMeshAgent.updateRotation = true;
         SetEscapeDestination();
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        agent.NavMeshAgent.speed = 4.0f;
+        agent.NavMeshAgent.speed = agent.Speed;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        agent.DrawDebugSphere(agent.transform.position, outOfReachRadius, Color.yellow);
-        agent.DrawDebugSphere(escapePosition, searchRadius, searchColor);
-
+        //agent.DrawDebugSphere(agent.transform.position, outOfReachRadius, Color.yellow);
+        //agent.DrawDebugSphere(escapePosition, searchRadius, searchColor);
 
         pathfindingTimer += Time.deltaTime;
         if (pathfindingTimer >= pathfindingInterval)

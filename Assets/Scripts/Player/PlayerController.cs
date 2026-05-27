@@ -3,13 +3,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
-
     [SerializeField] private float speed = 5.0f;
     [SerializeField] private float shotDistance = 50.0f;
     [SerializeField] private float bulletAnimationSpeed = 1.0f;
     [SerializeField] private Transform shotTransform;
-    [SerializeField] private TrailRenderer bulletTrailPrefab;
     [SerializeField] private LayerMask enemyLayerMask;
     [SerializeField] private GameObjectPool bulletPool;
 
@@ -76,10 +73,6 @@ public class PlayerController : MonoBehaviour
             if (damagable != null)
             {
                 damagable.TakeDamage(10);
-                if (!damagable.IsAlive)
-                {
-                    EventBus.Raise<AgentKillEvent>(hit.collider.gameObject);
-                }
             }
         }
         Vector3 targetPosition = shotTransform.position + (direction * shotDistance);

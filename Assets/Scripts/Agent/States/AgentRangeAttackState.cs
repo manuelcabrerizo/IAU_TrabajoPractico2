@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class AgentRangeAttackState : StateMachineBehaviour
@@ -5,7 +6,7 @@ public class AgentRangeAttackState : StateMachineBehaviour
     [SerializeField] private float outOfReachRadius = 10.0f;
     [SerializeField] private float escapeRadius = 5.0f;
 
-    private Agent agent = null;
+    private RangeAgent agent = null;
     private Transform attackTarget = null;
     private float rotationSpeed = 10.0f;
 
@@ -13,7 +14,7 @@ public class AgentRangeAttackState : StateMachineBehaviour
     {
         if (!agent)
         {
-            agent = animator.GetComponent<Agent>();
+            agent = animator.GetComponent<Agent>() as RangeAgent;
         }
         if (!attackTarget)
         {
@@ -21,18 +22,20 @@ public class AgentRangeAttackState : StateMachineBehaviour
         }
         agent.NavMeshAgent.isStopped = true;
         agent.NavMeshAgent.updateRotation = false;
+        agent.OnAction += Fire;
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        agent.OnAction -= Fire;
         agent.NavMeshAgent.isStopped = false;
         agent.NavMeshAgent.updateRotation = true;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        agent.DrawDebugSphere(agent.transform.position, escapeRadius, Color.green);
-        agent.DrawDebugSphere(agent.transform.position, outOfReachRadius, Color.yellow);
+        //agent.DrawDebugSphere(agent.transform.position, escapeRadius, Color.green);
+        //agent.DrawDebugSphere(agent.transform.position, outOfReachRadius, Color.yellow);
 
         Vector3 position = agent.transform.position;
         position.y = 0.0f;
@@ -52,6 +55,37 @@ public class AgentRangeAttackState : StateMachineBehaviour
         {
             animator.SetBool("IsPlayerIsEscapeArea", true);
         }
+    }
+
+    private void Fire()
+    {
+        agent.StartCoroutine(Shot(agent.BulletPool.Alloc(agent.BulletPool.transform).GetComponent<TrailRenderer>()));
+    }
+
+    private IEnumerator Shot(TrailRenderer trailRenderer)
+    {
+        Vector3 direction = agent.transform.forward;
+        direction.y = 0.0f;
+        direction.Normalize();
+        Vector3 startPosition = agent.ShotTransform.position;
+        if (Physics.Raycast(startPosition, direction, out RaycastHit hit, agent.ShotDistance, agent.TargetLayerMask))
+        {
+            IDamagable damagable = hit.collider.GetComponent<IDamagable>();
+            if (damagable != null)
+            {
+                damagable.TakeDamage(10);
+            }
+        }
+        Vector3 targetPosition = agent.ShotTransform.position + (direction * agent.ShotDistance);
+        float t = 0.0f;
+        while (t <= 1.0f)
+        {
+            trailRenderer.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            t += Time.deltaTime * agent.BulletAnimationSpeed;
+            yield return new WaitForEndOfFrame();
+        }
+        trailRenderer.Clear();
+        agent.BulletPool.Free(trailRenderer.gameObject);
     }
 
     private bool IsOutOfRange()

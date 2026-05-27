@@ -1,17 +1,62 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Agent : MonoBehaviour
 {
+    EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+
+    [SerializeField] public float Speed = 4;
+    [SerializeField] public float EscapeSpeed = 6.0f;
+    [SerializeField] public bool CanJump = false;
+
+    private Health health = null;
+    private Animator animator = null;
     private NavMeshAgent navMeshAgent = null;
     public NavMeshAgent NavMeshAgent => navMeshAgent;
+
+    public Action OnAction;
 
     private void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        health = GetComponent<Health>();
+        animator = GetComponent<Animator>();
+
+        health.OnHealthChange += OnHealthChange;
+        navMeshAgent.speed = Speed;
+        OnAwaken();
     }
 
-    public void DrawDebugSphere(Vector3 center, float radius, Color color)
+    private void OnDestroy()
+    {
+        OnDestroyed();
+        health.OnHealthChange -= OnHealthChange;
+    }
+
+    private void OnHealthChange()
+    {
+        animator.SetBool("IsAlive", health.IsAlive);
+    }
+
+    public void OnDeathAnimationEnd()
+    {
+        EventBus.Raise<AgentKillEvent>(gameObject);
+    }
+
+    public void OnMakeAction()
+    {
+        OnAction?.Invoke();
+    }
+
+    protected virtual void OnAwaken() { }
+    protected virtual void OnDestroyed() { }
+}
+
+
+/*
+     public void DrawDebugSphere(Vector3 center, float radius, Color color)
     {
         int segments = 12;
         float angleStep = 360f / segments;
@@ -31,4 +76,4 @@ public class Agent : MonoBehaviour
             Debug.DrawLine(yz1_fixed, yz2_fixed, color);
         }
     }
-}
+ */

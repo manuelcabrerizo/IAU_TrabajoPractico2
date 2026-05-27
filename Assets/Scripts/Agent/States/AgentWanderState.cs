@@ -23,7 +23,7 @@ public class AgentWanderState : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        agent.DrawDebugSphere(agent.transform.position, searchRadius, Color.green);
+        //agent.DrawDebugSphere(agent.transform.position, searchRadius, Color.green);
 
         if (agent.NavMeshAgent.remainingDistance <= agent.NavMeshAgent.stoppingDistance)
         {

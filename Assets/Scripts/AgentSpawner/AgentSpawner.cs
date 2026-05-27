@@ -10,8 +10,14 @@ public class AgentSpawner : MonoBehaviour
     [SerializeField] private float meleeSpawnMaxTime = 5.0f;
     [SerializeField] private float rangeSpawnMinTime = 4.0f;
     [SerializeField] private float rangeSpawnMaxTime = 10.0f;
+    [SerializeField] private float fastMeleeSpawnMinTime = 7.0f;
+    [SerializeField] private float fastMeleeSpawnMaxTime = 10.0f;
+    [SerializeField] private float fastRangeSpawnMinTime = 10.0f;
+    [SerializeField] private float fastRangeSpawnMaxTime = 15.0f;
     [SerializeField] private GameObjectPool meleePool;
     [SerializeField] private GameObjectPool rangePool;
+    [SerializeField] private GameObjectPool fastMeleePool;
+    [SerializeField] private GameObjectPool fastRangePool;
     [SerializeField] private Transform[] spawnPoints;
 
     private TaskScheduler taskScheduler = null;
@@ -28,6 +34,8 @@ public class AgentSpawner : MonoBehaviour
         EventBus.Subscribe<AgentKillEvent>(OnAgentKill);
         taskScheduler.Schedule(OnSpawnMelee, Random.Range(meleeSpawnMinTime, meleeSpawnMaxTime));
         taskScheduler.Schedule(OnSpawnRange, Random.Range(rangeSpawnMinTime, rangeSpawnMaxTime));
+        taskScheduler.Schedule(OnSpawFastMelee, Random.Range(fastMeleeSpawnMinTime, fastMeleeSpawnMaxTime));
+        taskScheduler.Schedule(OnSpawnFastRange, Random.Range(fastRangeSpawnMinTime, fastRangeSpawnMaxTime));
     }
 
     private void OnDestroy()
@@ -45,6 +53,8 @@ public class AgentSpawner : MonoBehaviour
         spawnedAgents.Remove(agentKillEvent.GameObject);
         meleePool.Free(agentKillEvent.GameObject);
         rangePool.Free(agentKillEvent.GameObject);
+        fastMeleePool.Free(agentKillEvent.GameObject);
+        fastRangePool.Free(agentKillEvent.GameObject);
     }
 
     private void OnSpawnMelee()
@@ -69,6 +79,34 @@ public class AgentSpawner : MonoBehaviour
             return;
         }
         GameObject go = rangePool.Alloc(transform);
+        IHealable healable = go.GetComponent<IHealable>();
+        healable.Heal(1000);
+        go.transform.position = GetRandomSpawnPoint();
+        spawnedAgents.Add(go);
+    }
+
+    private void OnSpawFastMelee()
+    {
+        taskScheduler.Schedule(OnSpawFastMelee, Random.Range(fastMeleeSpawnMinTime, fastMeleeSpawnMaxTime));
+        if (spawnedAgents.Count >= maxAgents)
+        {
+            return;
+        }
+        GameObject go = fastMeleePool.Alloc(transform);
+        IHealable healable = go.GetComponent<IHealable>();
+        healable.Heal(1000);
+        go.transform.position = GetRandomSpawnPoint();
+        spawnedAgents.Add(go);
+    }
+
+    private void OnSpawnFastRange()
+    {
+        taskScheduler.Schedule(OnSpawnFastRange, Random.Range(fastRangeSpawnMinTime, fastRangeSpawnMaxTime));
+        if (spawnedAgents.Count >= maxAgents)
+        {
+            return;
+        }
+        GameObject go = fastRangePool.Alloc(transform);
         IHealable healable = go.GetComponent<IHealable>();
         healable.Heal(1000);
         go.transform.position = GetRandomSpawnPoint();

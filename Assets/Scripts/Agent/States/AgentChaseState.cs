@@ -33,8 +33,8 @@ public class AgentChaseState : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        agent.DrawDebugSphere(agent.transform.position, attackRadius, Color.red);
-        agent.DrawDebugSphere(agent.transform.position, outOfReachRadius, Color.yellow);
+        //agent.DrawDebugSphere(agent.transform.position, attackRadius, Color.red);
+        //agent.DrawDebugSphere(agent.transform.position, outOfReachRadius, Color.yellow);
 
         pathfindingTimer += Time.deltaTime;
         if (pathfindingTimer >= pathfindingInterval)

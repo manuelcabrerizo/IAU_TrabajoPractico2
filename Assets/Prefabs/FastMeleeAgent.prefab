@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 6884455492286072448}
   - component: {fileID: 4739134264405486050}
   m_Layer: 9
-  m_Name: MeleeAgent
+  m_Name: FastMeleeAgent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -149,7 +149,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 0
-  m_WalkableMask: 11
+  m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!95 &7690642811121234862
 Animator:
@@ -222,9 +222,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f009fe0ca8d0147a4e81a347b6b54a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 4
+  Speed: 8
   EscapeSpeed: 6
-  CanJump: 0
+  CanJump: 1
   TargetLayerMask:
     serializedVersion: 2
     m_Bits: 256
@@ -491,7 +491,7 @@ PrefabInstance:
     - target: {fileID: 2142306156383835273, guid: 379cba339640b7141894eedf78b24b3f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: b54309a4205fda74fb2196fb850f56e9, type: 2}
+      objectReference: {fileID: 2100000, guid: 824ebfeb0f0933d4e9b8dba473be909e, type: 2}
     - target: {fileID: 5866666021909216657, guid: 379cba339640b7141894eedf78b24b3f, type: 3}
       propertyPath: m_Controller
       value: 

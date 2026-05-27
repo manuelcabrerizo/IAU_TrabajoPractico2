@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 3223244373026639165}
   - component: {fileID: 6252412290479555215}
   m_Layer: 9
-  m_Name: RangeAgent
+  m_Name: FastRangeAgent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -176,7 +176,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 0
-  m_WalkableMask: 11
+  m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!95 &9212308604483495365
 Animator:
@@ -249,9 +249,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21d074aa0ed0ac44cafc507fc0e8ba00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 4
-  EscapeSpeed: 6
-  CanJump: 0
+  Speed: 8
+  EscapeSpeed: 10
+  CanJump: 1
   BulletPool: {fileID: 6252412290479555215}
   ShotDistance: 25
   BulletAnimationSpeed: 2
@@ -598,6 +598,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ch44_nonPBR
       objectReference: {fileID: 0}
+    - target: {fileID: 1172324090021531726, guid: 76624c544f36ba443bc5aed2d142ea08, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 26793c0d4448286428f7386f77bf0280, type: 2}
     - target: {fileID: 5866666021909216657, guid: 76624c544f36ba443bc5aed2d142ea08, type: 3}
       propertyPath: m_Avatar
       value: 

@@ -5,7 +5,7 @@ public class AgentMeleeAttackState : StateMachineBehaviour
 {
     [SerializeField] private float outOfReachRadius = 2.0f;
 
-    private Agent agent = null;
+    private MeleeAgent agent = null;
     private Transform attackTarget = null;
     private float rotationSpeed = 10.0f;
 
@@ -13,7 +13,7 @@ public class AgentMeleeAttackState : StateMachineBehaviour
     {
         if (!agent)
         {
-            agent = animator.GetComponent<Agent>();
+            agent = animator.GetComponent<Agent>() as MeleeAgent;
         }
         if (!attackTarget)
         {
@@ -21,17 +21,19 @@ public class AgentMeleeAttackState : StateMachineBehaviour
         }
         agent.NavMeshAgent.isStopped = true;
         agent.NavMeshAgent.updateRotation = false;
+        agent.OnAction += Punch;
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         agent.NavMeshAgent.isStopped = false;
         agent.NavMeshAgent.updateRotation = true;
+        agent.OnAction -= Punch;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        agent.DrawDebugSphere(agent.transform.position, outOfReachRadius, Color.yellow);
+        //agent.DrawDebugSphere(agent.transform.position, outOfReachRadius, Color.yellow);
 
         Vector3 position = agent.transform.position;
         position.y = 0.0f;
@@ -46,6 +48,19 @@ public class AgentMeleeAttackState : StateMachineBehaviour
         if (IsOutOfRange())
         {
             animator.SetBool("IsPlayerInAttackArea", false);
+        }
+    }
+
+    private void Punch()
+    {
+        Collider[] colliders = Physics.OverlapSphere(agent.transform.position, 3.0f, agent.TargetLayerMask);
+        foreach (Collider collider in colliders)
+        {
+            IDamagable damagable = collider.GetComponent<IDamagable>();
+            if (damagable != null)
+            {
+                damagable.TakeDamage(10);
+            }
         }
     }
 
