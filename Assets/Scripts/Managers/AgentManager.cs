@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class AgentManager : MonoBehaviour
 {
@@ -37,6 +38,7 @@ public class AgentManager : MonoBehaviour
         EventBus.Subscribe<AgentKillEvent>(OnAgentKill);
         EventBus.Subscribe<OnLowHealthEvent>(OnLowHealth);
         EventBus.Subscribe<OnHightHealthEvent>(OnHightHealth);
+        EventBus.Subscribe<NpcAgenKillEvent>(OnNpcAgentKill);
         taskScheduler.Schedule(OnSpawnMelee, Random.Range(meleeSpawnMinTime, meleeSpawnMaxTime));
         taskScheduler.Schedule(OnSpawnRange, Random.Range(rangeSpawnMinTime, rangeSpawnMaxTime));
         taskScheduler.Schedule(OnSpawFastMelee, Random.Range(fastMeleeSpawnMinTime, fastMeleeSpawnMaxTime));
@@ -49,6 +51,7 @@ public class AgentManager : MonoBehaviour
         EventBus.Unsubscribe<AgentKillEvent>(OnAgentKill);
         EventBus.Unsubscribe<OnLowHealthEvent>(OnLowHealth);
         EventBus.Unsubscribe<OnHightHealthEvent>(OnHightHealth);
+        EventBus.Unsubscribe<NpcAgenKillEvent>(OnNpcAgentKill);
     }
 
     private void Update()
@@ -82,6 +85,11 @@ public class AgentManager : MonoBehaviour
         fastMeleePool.Free(agentKillEvent.GameObject);
         fastRangePool.Free(agentKillEvent.GameObject);
         npcPool.Free(agentKillEvent.GameObject);
+    }
+
+    private void OnNpcAgentKill(in NpcAgenKillEvent npcAgenKillEvent)
+    {
+        RemoveTargteFromAttakingAgents(npcAgenKillEvent.GameObject);
     }
 
     private void OnSpawnMelee()
@@ -171,7 +179,7 @@ public class AgentManager : MonoBehaviour
 
     private Vector3 GetRandomSpawnPoint()
     {
-        if(spawnPoints.Length == 0)
+        if (spawnPoints.Length == 0)
             return Vector3.zero;
         return spawnPoints[Random.Range(0, spawnPoints.Length)].position;
     }
@@ -183,6 +191,20 @@ public class AgentManager : MonoBehaviour
             if (go.TryGetComponent<Agent>(out Agent agent))
             {
                 agent.IsMad = value;
+            }
+        }
+    }
+
+    private void RemoveTargteFromAttakingAgents(GameObject npc)
+    {
+        foreach (GameObject go in spawnedAgents)
+        {
+            if (go.TryGetComponent<Agent>(out Agent agent))
+            {
+                if (agent.Target == npc.transform)
+                {
+                    agent.Target = null;
+                }
             }
         }
     }

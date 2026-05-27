@@ -28,17 +28,23 @@ public class AgentMeleeAttackState : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Vector3 position = agent.transform.position;
-        position.y = 0.0f;
-        Vector3 target = agent.Target.position;
-        target.y = 0.0f;
-        Vector3 direction = (target - position).normalized;
-        float angle = Mathf.Atan2(direction.x, direction.z);
+        if (agent.Target != null)
+        {
+            Vector3 position = agent.transform.position;
+            position.y = 0.0f;
+            Vector3 target = agent.Target.position;
+            target.y = 0.0f;
+            Vector3 direction = (target - position).normalized;
+            float angle = Mathf.Atan2(direction.x, direction.z);
 
-        Quaternion targetRotation = Quaternion.Euler(0.0f, Mathf.Rad2Deg * angle, 0.0f);
-        agent.transform.rotation = Quaternion.Slerp(agent.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
-        if (IsOutOfRange())
+            Quaternion targetRotation = Quaternion.Euler(0.0f, Mathf.Rad2Deg * angle, 0.0f);
+            agent.transform.rotation = Quaternion.Slerp(agent.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            if (IsOutOfRange())
+            {
+                animator.SetBool("IsPlayerInAttackArea", false);
+            }
+        }
+        else
         {
             animator.SetBool("IsPlayerInAttackArea", false);
         }
@@ -46,14 +52,17 @@ public class AgentMeleeAttackState : StateMachineBehaviour
 
     private void Punch()
     {
-        Collider[] colliders = Physics.OverlapSphere(agent.transform.position, 1.5f, agent.TargetLayerMask);
-        foreach (Collider collider in colliders)
+        if (agent.Target != null)
         {
-            IDamagable damagable = collider.GetComponent<IDamagable>();
-            if (damagable != null)
+            Collider[] colliders = Physics.OverlapSphere(agent.transform.position, 1.5f, agent.TargetLayerMask);
+            foreach (Collider collider in colliders)
             {
-                int damage = agent.IsMad ? agent.MadDamage : agent.NormalDamage;
-                damagable.TakeDamage(damage);
+                IDamagable damagable = collider.GetComponent<IDamagable>();
+                if (damagable != null)
+                {
+                    int damage = agent.IsMad ? agent.MadDamage : agent.NormalDamage;
+                    damagable.TakeDamage(damage);
+                }
             }
         }
     }

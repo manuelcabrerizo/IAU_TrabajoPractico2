@@ -17,7 +17,6 @@ public class AgentChaseState : StateMachineBehaviour
             agent = animator.GetComponent<Agent>();
         }
         agent.NavMeshAgent.updateRotation = true;
-        agent.NavMeshAgent.SetDestination(agent.Target.position);
         pathfindingTimer = 0.0f;
     }
 

@@ -41,7 +41,11 @@ public class AgentWanderState : StateMachineBehaviour
 
     private Vector3 GetNextDestination()
     {
-        float angle = Random.Range(0.0f, Mathf.PI * 2.0f);
+        float twoPI = Mathf.PI * 2.0f;
+        float ration = 0.2f;
+        float angle = Mathf.Atan2(agent.transform.forward.z, agent.transform.forward.x);
+        float offset = Random.Range(-twoPI * ration, twoPI* ration);
+        angle += offset;
         Vector3 direction = new Vector3(Mathf.Cos(angle), 0.0f, Mathf.Sin(angle));
         return agent.transform.position + direction * 10.0f;
     }

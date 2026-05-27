@@ -31,14 +31,20 @@ public class AgentEscapeState : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        pathfindingTimer += Time.deltaTime;
-        if (pathfindingTimer >= pathfindingInterval)
+        if (agent.Target != null)
         {
-            SetEscapeDestination();
-            pathfindingTimer -= pathfindingInterval;
+            pathfindingTimer += Time.deltaTime;
+            if (pathfindingTimer >= pathfindingInterval)
+            {
+                SetEscapeDestination();
+                pathfindingTimer -= pathfindingInterval;
+            }
+            if (IsOutOfRange())
+            {
+                animator.SetBool("IsPlayerIsEscapeArea", false);
+            }
         }
-
-        if (IsOutOfRange())
+        else
         {
             animator.SetBool("IsPlayerIsEscapeArea", false);
         }

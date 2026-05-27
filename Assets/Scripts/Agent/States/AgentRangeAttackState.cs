@@ -29,23 +29,30 @@ public class AgentRangeAttackState : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Vector3 position = agent.transform.position;
-        position.y = 0.0f;
-        Vector3 target = agent.Target.position;
-        target.y = 0.0f;
-        Vector3 direction = (target - position).normalized;
-        float angle = Mathf.Atan2(direction.x, direction.z);
+        if (agent.Target != null)
+        {
+            Vector3 position = agent.transform.position;
+            position.y = 0.0f;
+            Vector3 target = agent.Target.position;
+            target.y = 0.0f;
+            Vector3 direction = (target - position).normalized;
+            float angle = Mathf.Atan2(direction.x, direction.z);
 
-        Quaternion targetRotation = Quaternion.Euler(0.0f, Mathf.Rad2Deg * angle, 0.0f);
-        agent.transform.rotation = Quaternion.Slerp(agent.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        
-        if (IsOutOfRange())
+            Quaternion targetRotation = Quaternion.Euler(0.0f, Mathf.Rad2Deg * angle, 0.0f);
+            agent.transform.rotation = Quaternion.Slerp(agent.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+            if (IsOutOfRange())
+            {
+                animator.SetBool("IsPlayerInAttackArea", false);
+            }
+            if (IsPlayerInScapeRange())
+            {
+                animator.SetBool("IsPlayerIsEscapeArea", true);
+            }
+        }
+        else
         {
             animator.SetBool("IsPlayerInAttackArea", false);
-        }
-        if (IsPlayerInScapeRange())
-        {
-            animator.SetBool("IsPlayerIsEscapeArea", true);
         }
     }
 
