@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+
     [SerializeField] private float speed = 5.0f;
     [SerializeField] private float shotDistance = 50.0f;
     [SerializeField] private float bulletAnimationSpeed = 1.0f;
     [SerializeField] private Transform shotTransform;
     [SerializeField] private TrailRenderer bulletTrailPrefab;
+    [SerializeField] private LayerMask enemyLayerMask;
 
     private CharacterController characterController = null;
     private Animator animator = null;
@@ -57,17 +60,31 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             // TODO: pool ...
-            StartCoroutine(ShotAnimation(Instantiate(bulletTrailPrefab)));
-            // TODO: raycast whit the enemies
+            StartCoroutine(Shot(Instantiate(bulletTrailPrefab)));
         }
     }
 
-    private IEnumerator ShotAnimation(TrailRenderer trailRenderer)
+    private IEnumerator Shot(TrailRenderer trailRenderer)
     {
-        Vector3 direction = shotTransform.up;
+        Vector3 direction = transform.forward;
         direction.y = 0.0f;
         direction.Normalize();
         Vector3 startPosition = shotTransform.position;
+
+        RaycastHit hit;
+        if (Physics.Raycast(startPosition, direction, out hit, shotDistance, enemyLayerMask))
+        {
+            IDamagable damagable = hit.collider.GetComponent<IDamagable>();
+            if (damagable != null)
+            {
+                damagable.TakeDamage(10);
+                if (!damagable.IsAlive)
+                {
+                    EventBus.Raise<AgentKillEvent>(hit.collider.gameObject);
+                }
+            }
+        }
+
         Vector3 targetPosition = shotTransform.position + (direction * shotDistance);
         float t = 0.0f;
         while (t <= 1.0f)

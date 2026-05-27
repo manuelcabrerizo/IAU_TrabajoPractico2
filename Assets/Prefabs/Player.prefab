@@ -76,6 +76,9 @@ MonoBehaviour:
   bulletAnimationSpeed: 4
   shotTransform: {fileID: 1400689569564536679}
   bulletTrailPrefab: {fileID: 6833902183498189446, guid: 4ec71853dd420934c862f17c44ebddf7, type: 3}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &8108114045982219690
 GameObject:
   m_ObjectHideFlags: 0

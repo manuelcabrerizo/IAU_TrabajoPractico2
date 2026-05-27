@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class AgentWanderState : StateMachineBehaviour
 {
@@ -42,6 +43,8 @@ public class AgentWanderState : StateMachineBehaviour
 
     private Vector3 GetNextDestination()
     {
-        return Vector3.zero;
+        float angle = Random.Range(0.0f, Mathf.PI * 2.0f);
+        Vector3 direction = new Vector3(Mathf.Cos(angle), 0.0f, Mathf.Sin(angle));
+        return agent.transform.position + direction * 10.0f;
     }
 }
