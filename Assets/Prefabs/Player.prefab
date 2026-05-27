@@ -72,6 +72,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53e66109775b88249905a675410d136b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackPower: 10
+  powerUpDuration: 30
   speed: 5
   slowSpeed: 1.5
   shotDistance: 25
@@ -83,6 +85,9 @@ MonoBehaviour:
   slowAreaLayerMask:
     serializedVersion: 2
     m_Bits: 128
+  npcLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
   bulletPool: {fileID: 0}
 --- !u!114 &7248984810884874461
 MonoBehaviour:

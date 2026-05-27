@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour
         if (Utils.TestLayer(other.gameObject, npcLayerMask))
         {
             EventBus.Raise<AgentKillEvent>(other.gameObject);
+            EventBus.Raise<OnPowerUpGrabEvent>();
             currentAttackPower = 1000;
             taskScheduler.Schedule(OnPowerUpEnd, powerUpDuration);
         }
@@ -100,6 +101,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnPowerUpEnd()
     {
+        EventBus.Raise<OnPowerUpEndEvent>();
         currentAttackPower = attackPower;
     }
 

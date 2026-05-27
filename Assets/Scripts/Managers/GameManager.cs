@@ -9,16 +9,17 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         ServiceProvider.Instance.AddService<EventBus>(new EventBus());
-        EventBus.Subscribe<AgentKillEvent>(OnAgentKill);
+        EventBus.Subscribe<AgentDeadStateEnteredEvent>(OnAgentDeadStateEntered);
     }
 
     private void OnDestroy()
     {
-        EventBus.Unsubscribe<AgentKillEvent>(OnAgentKill);
+        EventBus.Unsubscribe<AgentDeadStateEnteredEvent>(OnAgentDeadStateEntered);
     }
 
-    private void OnAgentKill(in AgentKillEvent agentKillEvent)
+    private void OnAgentDeadStateEntered(in AgentDeadStateEnteredEvent agentDeadStateEnteredEvent)
     {
         score++;
+        EventBus.Raise<OnScoreChangeEvent>(score);
     }
 }

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class AgentDeathState : StateMachineBehaviour
 {
+    EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+
     private Agent agent = null;
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -10,5 +12,6 @@ public class AgentDeathState : StateMachineBehaviour
             agent = animator.GetComponent<Agent>();
         }
         agent.NavMeshAgent.isStopped = true;
+        EventBus.Raise<AgentDeadStateEnteredEvent>();
     }
 }
